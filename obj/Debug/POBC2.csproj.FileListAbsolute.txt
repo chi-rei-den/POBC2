@@ -27,3 +27,4 @@ C:\Users\cy332\Desktop\原创插件\1.4\PBOC\POBC2\POBC2\obj\Debug\POBC2.csproj.
 C:\Users\cy332\Desktop\原创插件\1.4\PBOC\POBC2\POBC2\obj\Debug\POBC2.csproj.CopyComplete
 C:\Users\cy332\Desktop\原创插件\1.4\PBOC\POBC2\POBC2\obj\Debug\POBC2.dll
 C:\Users\cy332\Desktop\原创插件\1.4\PBOC\POBC2\POBC2\obj\Debug\POBC2.pdb
+C:\Users\cy332\Desktop\原创插件\1.4\PBOC\POBC2\POBC2\obj\Debug\POBC2.csprojAssemblyReference.cache

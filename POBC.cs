@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using POBC;
+using pobcc;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -151,6 +152,54 @@ namespace Bank
 			{
 				HelpText = "查询您当前拥有的货币数量."
 			});
+			Commands.ChatCommands.Add(new Command("pobc.up", Pobcup, "pobcup","给钱")
+			{
+				HelpText = "给与指定玩家一定数量货币."
+			});
+			Commands.ChatCommands.Add(new Command("pobc.Down", PobcDown, "pobcup", "扣钱")
+			{
+				HelpText = "减少玩家一定数量货币."
+			});
+		}
+
+		private void PobcDown(CommandArgs args)
+		{
+			if (args.Parameters.Count < 2)
+			{
+				args.Player.SendErrorMessage("语法错误，正确语法：/扣钱  玩家名 货币值");
+				return;
+			}
+			if (!Db.Queryuser(args.Parameters[1]))
+			{
+				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:" + args.Parameters[1] + "! 请确认玩家名");
+				return;
+			}
+			if (int.Parse(args.Parameters[2]) < Db.QueryCurrency(args.Parameters[1]))
+			{
+				args.Player.SendErrorMessage("玩家拥有的货币不够你要减去的货币数，玩家拥有货币数："+Db.QueryCurrency(args.Parameters[1]));
+				return;
+			}
+			Db.DownC(args.Parameters[1], int.Parse(args.Parameters[2]));
+		}
+
+		private void Pobcup(CommandArgs args)
+		{
+			if (args.Parameters.Count < 2)
+			{
+				args.Player.SendErrorMessage("语法错误，正确语法：/给钱  玩家名 货币值");
+				return;
+			}
+			if (!Db.Queryuser(args.Parameters[1]))
+			{
+				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:"+ args.Parameters[1]+"! 请确认玩家名");
+				return;
+			}
+			if (int.Parse(args.Parameters[2])>0)
+			{
+				args.Player.SendErrorMessage("不能给与玩家负值货币值");
+				return;
+			}
+			Db.UpC(args.Parameters[1], int.Parse(args.Parameters[2]));
 		}
 
 		void Query(CommandArgs args)

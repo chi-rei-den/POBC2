@@ -74,6 +74,12 @@ namespace pobcc
             string query = $"UPDATE POBC SET Currency = Currency + {data} WHERE UserName = '{user}';";
             db.Query(query);
         }
+
+        public static void DownC(string user, int data)
+        {
+            string query = $"UPDATE POBC SET Currency = Currency - {data} WHERE UserName = '{user}';";
+            db.Query(query);
+        }
         public static void Adduser(string user,int data)
         {
             string query = $"INSERT INTO POBC (UserName,Currency) VALUES ('{user}','{data}');";
