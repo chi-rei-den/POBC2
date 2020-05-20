@@ -59,7 +59,7 @@ namespace Bank
 			{
 				args.Msg.reader.BaseStream.Position = args.Index;
 				int playerID = args.Msg.whoAmI;
-				var p = Main.player[playerID];
+			//	var p = Main.player[playerID];
 				var n = Main.player[playerID].name;
 				if (n != null)
 				{
@@ -89,7 +89,7 @@ namespace Bank
 		private void Dps(NpcStrikeEventArgs args)
 		{
 			var ply = args.Player.whoAmI;
-			var n = TShock.Players[ply].Name;
+			//var n = TShock.Players[ply].Name;
 			if (!TShock.Players[ply].Group.HasPermission("pobc.c"))
 			{
 				TShock.Players[ply].SendWarningMessage(" 你没有权限!");
@@ -101,7 +101,7 @@ namespace Bank
 			var id2 = args.Npc.whoAmI;
 			// 存在BUG  后面再来摸
 			int B = Array.IndexOf(Config.Pobcs[0].IgnoreNpc, id); // 这里的1就是你要查找的值
-			int BB = Config.Pobcs[0].IgnoreNpc[1];
+			//int BB = Config.Pobcs[0].IgnoreNpc[1];
 			if (B == -1)
 			{	
 				System.IO.Directory.CreateDirectory(TShock.SavePath + $"\\POBC\\");

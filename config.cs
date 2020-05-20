@@ -29,7 +29,7 @@ namespace POBC
 				Name = "POBC",
 				IgnoreNpc = new int[]
 				{
-					1,
+					1,-1,
 				},
 				Multiple = 1
 			};
