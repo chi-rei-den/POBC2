@@ -37,7 +37,7 @@ namespace POBC2
 		public override void Initialize()
 		{
 			Db.Connect();
-			data = new Data(d => (d * 147 / 100) / 2 * Config.Pobcs[0].Multiple);
+			data = new Data(d => (d * 147 / 100) / 2 * Config.Multiple);
 			ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
 			ServerApi.Hooks.NpcStrike.Register(this, Dps);
 			ServerApi.Hooks.NpcKilled.Register(this, KillID);
@@ -63,6 +63,7 @@ namespace POBC2
 				var n = Main.player[playerID].name;
 				if (n != null)
 				{
+					data.ClearPlayer(playerID);
 					//Data.Data.DelUser(n);
 				}
 			}

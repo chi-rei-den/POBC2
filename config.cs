@@ -8,12 +8,14 @@ namespace POBC2
 {
 	public class POBCConfin
 	{
-		public Pobccc[] Pobcs = new Pobccc[0];
+		public string Name = string.Empty;
+		public int[] IgnoreNpc = new int[0];
+		public int Multiple = 0;
 
 		//todo: implement with hashset
 		public bool IsIgnored(int npctype)
 		{
-			return Pobcs[0].IgnoreNpc.Contains(npctype);
+			return IgnoreNpc.Contains(npctype);
 		}
 		public POBCConfin Write(string file)
 		{
@@ -32,27 +34,13 @@ namespace POBC2
 
 		public static void WriteExample(string file)
 		{
-			var Ex = new Pobccc()
+			var conf = new POBCConfin()
 			{
 				Name = "POBC",
-				IgnoreNpc = new int[]
-				{
-					1,-1,
-				},
+				IgnoreNpc = new int[] { },
 				Multiple = 1
 			};
-			var Conf = new POBCConfin()
-			{
-				Pobcs = new Pobccc[] { Ex }
-			};
-			Conf.Write(file);
+			conf.Write(file);
 		}
-	}
-
-	public class Pobccc
-	{
-		public string Name = string.Empty;
-		public int[] IgnoreNpc = new int[0];
-		public int Multiple = 0;
 	}
 }

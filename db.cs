@@ -12,7 +12,7 @@ using TShockAPI.DB;
 
 namespace POBC2
 {
-    //fixme: defense against the sql injection
+    //fixme: defend against the sql injection
     public static class Db
     {
         private static IDbConnection db;
