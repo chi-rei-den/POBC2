@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using TShockAPI;
 
@@ -11,7 +7,7 @@ namespace POBC2
     public class Data
     {
         private readonly Func<int, int> calcExp;
-        
+
         private readonly int[,] damage = new int[Main.maxNPCs, Main.maxPlayers + 1];
 
         public Data(Func<int, int> calcExp)

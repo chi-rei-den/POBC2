@@ -1,14 +1,7 @@
-using Newtonsoft.Json;
-using POBC2;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Terraria;
-using Terraria.Localization;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.Hooks;
@@ -59,8 +52,8 @@ namespace POBC2
 			{
 				args.Msg.reader.BaseStream.Position = args.Index;
 				int playerID = args.Msg.whoAmI;
-			//	var p = Main.player[playerID];
-				var n = Main.player[playerID].name;
+				//	var p = Main.player[playerID];
+				string n = Main.player[playerID].name;
 				if (n != null)
 				{
 					data.ClearPlayer(playerID);
@@ -84,7 +77,7 @@ namespace POBC2
 
 		private void Dps(NpcStrikeEventArgs args)
 		{
-			var ply = args.Player.whoAmI;
+			int ply = args.Player.whoAmI;
 			//var n = TShock.Players[ply].Name;
 			if (!TShock.Players[ply].Group.HasPermission("pobc.c"))
 			{
@@ -93,9 +86,9 @@ namespace POBC2
 			}
 
 			string name = args.Player.name;
-			var id = args.Npc.netID;
-			var id2 = args.Npc.whoAmI;
-			var damage = Math.Min(args.Damage, args.Npc.realLife == -1 ? args.Npc.life : Main.npc[args.Npc.realLife].life);
+			int id = args.Npc.netID;
+			int id2 = args.Npc.whoAmI;
+			int damage = Math.Min(args.Damage, args.Npc.realLife == -1 ? args.Npc.life : Main.npc[args.Npc.realLife].life);
 			// 存在BUG  后面再来摸
 
 			//int BB = Config.Pobcs[0].IgnoreNpc[1];
@@ -110,12 +103,8 @@ namespace POBC2
 			else
 			{
 
-			//	TShock.Utils.Broadcast(" 你击败的NPC 已被屏蔽 NPC ID :" + id, 255, 255, 255);
+				//	TShock.Utils.Broadcast(" 你击败的NPC 已被屏蔽 NPC ID :" + id, 255, 255, 255);
 			}
-
-				
-
-
 		}
 		#endregion
 
@@ -142,14 +131,14 @@ namespace POBC2
 			Order = 10;
 		}
 
-		void OnInitialize(EventArgs args) //添加命令
+		private void OnInitialize(EventArgs args) //添加命令
 		{
 
 			Commands.ChatCommands.Add(new Command("pobc.query", Query, "查询")
 			{
 				HelpText = "查询您当前拥有的货币数量."
 			});
-			Commands.ChatCommands.Add(new Command("pobc.up", Pobcup, "pobcup","给钱")
+			Commands.ChatCommands.Add(new Command("pobc.up", Pobcup, "pobcup", "给钱")
 			{
 				HelpText = "给与指定玩家一定数量货币."
 			});
@@ -173,7 +162,7 @@ namespace POBC2
 			}
 			if (int.Parse(args.Parameters[2]) < Db.QueryCurrency(args.Parameters[1]))
 			{
-				args.Player.SendErrorMessage("玩家拥有的货币不够你要减去的货币数，玩家拥有货币数："+Db.QueryCurrency(args.Parameters[1]));
+				args.Player.SendErrorMessage("玩家拥有的货币不够你要减去的货币数，玩家拥有货币数：" + Db.QueryCurrency(args.Parameters[1]));
 				return;
 			}
 			Db.DownC(args.Parameters[1], int.Parse(args.Parameters[2]));
@@ -188,10 +177,10 @@ namespace POBC2
 			}
 			if (!Db.Queryuser(args.Parameters[1]))
 			{
-				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:"+ args.Parameters[1]+"! 请确认玩家名");
+				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:" + args.Parameters[1] + "! 请确认玩家名");
 				return;
 			}
-			if (int.Parse(args.Parameters[2])>0)
+			if (int.Parse(args.Parameters[2]) > 0)
 			{
 				args.Player.SendErrorMessage("不能给与玩家负值货币值");
 				return;
@@ -199,15 +188,12 @@ namespace POBC2
 			Db.UpC(args.Parameters[1], int.Parse(args.Parameters[2]));
 		}
 
-		void Query(CommandArgs args)
-		{	
-	
-			var a = Db.QueryCurrency(args.Player.Name);
-			args.Player.SendWarningMessage(" 您当前拥有货币数： " + a );
+		private void Query(CommandArgs args)
+		{
+			int a = Db.QueryCurrency(args.Player.Name);
+			args.Player.SendWarningMessage(" 您当前拥有货币数： " + a);
 
-
-
-			}
+		}
 
 		public void File()
 		{
@@ -220,19 +206,7 @@ namespace POBC2
 				Config = new POBCConfin();
 				TShock.Log.ConsoleError("[POBC] 读取配置文件发生错误!\n{0}".SFormat(ex.ToString()));
 			}
-
-			
-		
-
-
 		}
-
-
-
-
 	}
-
-
-
 }
 

@@ -1,6 +1,4 @@
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -34,7 +32,7 @@ namespace POBC2
 
 		public static void WriteExample(string file)
 		{
-			var conf = new POBCConfin()
+			POBCConfin conf = new POBCConfin()
 			{
 				Name = "POBC",
 				IgnoreNpc = new int[] { },
