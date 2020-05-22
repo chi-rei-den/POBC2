@@ -10,7 +10,7 @@ using Terraria;
 using TShockAPI;
 using TShockAPI.DB;
 
-namespace pobcc
+namespace POBC2
 {
     //fixme: defense against the sql injection
     public static class Db

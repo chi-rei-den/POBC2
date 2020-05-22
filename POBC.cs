@@ -1,7 +1,5 @@
 using Newtonsoft.Json;
-using POBC;
 using POBC2;
-using pobcc;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +13,7 @@ using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.Hooks;
 
-namespace Bank
+namespace POBC2
 {
 	[ApiVersion(2, 1)]
 	public class POBCSystem : TerrariaPlugin
@@ -203,7 +201,7 @@ namespace Bank
 		void Query(CommandArgs args)
 		{	
 	
-			var a = pobcc.Db.QueryCurrency(args.Player.Name);
+			var a = Db.QueryCurrency(args.Player.Name);
 			args.Player.SendWarningMessage(" 您当前拥有货币数： " + a );
 
 
