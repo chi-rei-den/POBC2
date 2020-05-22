@@ -162,7 +162,7 @@ namespace POBC2
 			}
 			if (int.Parse(args.Parameters[1]) > Db.QueryCurrency(args.Parameters[0]))
 			{
-				args.Player.SendErrorMessage("玩家拥有的货币不够你要减去的货币数，玩家拥有货币数：" + Db.QueryCurrency(args.Parameters[1]));
+				args.Player.SendErrorMessage("玩家拥有的货币不够你要减去的货币数，玩家拥有货币数：" + Db.QueryCurrency(args.Parameters[0]));
 				return;
 			}
 			Db.DownC(args.Parameters[0], int.Parse(args.Parameters[1]));
