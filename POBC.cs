@@ -155,32 +155,32 @@ namespace POBC2
 				args.Player.SendErrorMessage("语法错误，正确语法：/扣钱  玩家名 货币值");
 				return;
 			}
-			if (!Db.Queryuser(args.Parameters[1]))
+			if (!Db.Queryuser(args.Parameters[0]))
 			{
-				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:" + args.Parameters[1] + "! 请确认玩家名");
+				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:" + args.Parameters[0] + "! 请确认玩家名");
 				return;
 			}
-			if (int.Parse(args.Parameters[2]) < Db.QueryCurrency(args.Parameters[1]))
+			if (int.Parse(args.Parameters[1]) > Db.QueryCurrency(args.Parameters[0]))
 			{
 				args.Player.SendErrorMessage("玩家拥有的货币不够你要减去的货币数，玩家拥有货币数：" + Db.QueryCurrency(args.Parameters[1]));
 				return;
 			}
-			Db.DownC(args.Parameters[1], int.Parse(args.Parameters[2]));
+			Db.DownC(args.Parameters[0], int.Parse(args.Parameters[1]));
 		}
 
 		private void Pobcup(CommandArgs args)
 		{
 			if (args.Parameters.Count < 2)
 			{
-				args.Player.SendErrorMessage("语法错误，正确语法：/给钱  玩家名 货币值");
+				args.Player.SendErrorMessage("语法错误，正确语法：/给钱 玩家名 货币值");
 				return;
 			}
-			if (!Db.Queryuser(args.Parameters[1]))
+			if (!Db.Queryuser(args.Parameters[0]))
 			{
-				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:" + args.Parameters[1] + "! 请确认玩家名");
+				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:" + args.Parameters[0] + "! 请确认玩家名");
 				return;
 			}
-			if (int.Parse(args.Parameters[2]) > 0)
+			if (int.Parse(args.Parameters[1]) > 0)
 			{
 				args.Player.SendErrorMessage("不能给与玩家负值货币值");
 				return;
