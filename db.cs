@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Mono.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ using TShockAPI.DB;
 
 namespace pobcc
 {
+    //fixme: defense against the sql injection
     public static class Db
     {
         private static IDbConnection db;

@@ -67,8 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="config.cs" />
-    <Compile Include="Db.cs" />
     <Compile Include="Data.cs" />
+    <Compile Include="Db.cs" />
     <Compile Include="POBC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

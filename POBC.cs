@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using POBC;
+using POBC2;
 using pobcc;
 using System;
 using System.Collections;
@@ -19,7 +20,6 @@ namespace Bank
 	[ApiVersion(2, 1)]
 	public class POBCSystem : TerrariaPlugin
 	{
-
 		#region Info
 		public override string Name => "PBOC";
 
@@ -28,21 +28,23 @@ namespace Bank
 		public override string Description => "DPS 获取货币系统.";
 
 		public override Version Version => Assembly.GetExecutingAssembly().GetName().Version;
-		public string ConfigPath { get { return Path.Combine(TShock.SavePath, "POBC.json"); } }
+		public string ConfigPath => Path.Combine(TShock.SavePath, "POBC.json");
 		public POBCConfin Config = new POBCConfin();
 		public string time = DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss");
 		#endregion
 
 		#region Initialize
+
+		public Data data;
 		public override void Initialize()
 		{
-			pobcc.Db.Connect();
-			Data.Data.CreateDataTable();
+			Db.Connect();
+			data = new Data(d => (d * 147 / 100) / 2 * Config.Pobcs[0].Multiple);
 			ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
 			ServerApi.Hooks.NpcStrike.Register(this, Dps);
 			ServerApi.Hooks.NpcKilled.Register(this, KillID);
 			ServerApi.Hooks.NetGetData.Register(this, GetData);//抓包
-			TShockAPI.Hooks.PlayerHooks.PlayerPostLogin += Login;
+			PlayerHooks.PlayerPostLogin += Login;
 			PlayerHooks.PlayerLogout += UserOut;
 			File();
 		}
@@ -51,7 +53,6 @@ namespace Bank
 		private void UserOut(PlayerLogoutEventArgs e)
 		{
 			string n = e.Player.Name;
-			Data.Data.DelUser(n);
 		}
 
 		private void GetData(GetDataEventArgs args)
@@ -64,12 +65,8 @@ namespace Bank
 				var n = Main.player[playerID].name;
 				if (n != null)
 				{
-					Data.Data.DelUser(n);
+					//Data.Data.DelUser(n);
 				}
-				
-
-
-
 			}
 		}
 
@@ -80,11 +77,10 @@ namespace Bank
 
 		public void KillID(NpcKilledEventArgs args)
 		{
-			if (Array.IndexOf(Config.Pobcs[0].IgnoreNpc, args.npc.netID) == -1)
+			if (!Config.IsIgnored(args.npc.netID))
 			{
-				Data.Data.DelNpc(args.npc.whoAmI);
+				data.SettleNPC(args.npc.whoAmI);
 			}
-		
 		}
 
 		private void Dps(NpcStrikeEventArgs args)
@@ -96,19 +92,21 @@ namespace Bank
 				TShock.Players[ply].SendWarningMessage(" 你没有权限!");
 				return;
 			}
-			var c = (args.Damage * 147 / 100) / 2 * Config.Pobcs[0].Multiple;
+
 			string name = args.Player.name;
-			var id =args.Npc.netID;
+			var id = args.Npc.netID;
 			var id2 = args.Npc.whoAmI;
+			var damage = Math.Min(args.Damage, args.Npc.realLife == -1 ? args.Npc.life : Main.npc[args.Npc.realLife].life);
 			// 存在BUG  后面再来摸
-			int B = Array.IndexOf(Config.Pobcs[0].IgnoreNpc, id); // 这里的1就是你要查找的值
+
 			//int BB = Config.Pobcs[0].IgnoreNpc[1];
-			if (B == -1)
-			{	
+			if (!Config.IsIgnored(id))
+			{
+				//todo: 没必要刀刀都记
 				System.IO.Directory.CreateDirectory(TShock.SavePath + $"\\POBC\\");
-				System.IO.File.AppendAllText(TShock.SavePath + $"\\POBC\\{time}.txt",$" \r\n {name}击败的NPC {id} 获得经验：{ c}");
-			//	TShock.Utils.Broadcast(" 你击败的NPC :" + id + "获得经验：" + c, 255, 255, 255);
-				Data.Data.Add(name, id2, c, id);
+				System.IO.File.AppendAllText(TShock.SavePath + $"\\POBC\\{time}.txt", $" \r\n {name}击败的NPC {id} 获得经验：{damage}");
+				//	TShock.Utils.Broadcast(" 你击败的NPC :" + id + "获得经验：" + c, 255, 255, 255);
+				data.AddDamage(args.Npc.whoAmI, args.Player.whoAmI, damage);
 			}
 			else
 			{

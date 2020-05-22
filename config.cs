@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace POBC
 {
@@ -7,6 +10,11 @@ namespace POBC
 	{
 		public Pobccc[] Pobcs = new Pobccc[0];
 
+		//todo: implement with hashset
+		public bool IsIgnored(int npctype)
+		{
+			return Pobcs[0].IgnoreNpc.Contains(npctype);
+		}
 		public POBCConfin Write(string file)
 		{
 			File.WriteAllText(file, JsonConvert.SerializeObject(this, Formatting.Indented));
