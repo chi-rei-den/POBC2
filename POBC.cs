@@ -180,12 +180,12 @@ namespace POBC2
 				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:" + args.Parameters[0] + "! 请确认玩家名");
 				return;
 			}
-			if (int.Parse(args.Parameters[1]) > 0)
+			if (int.Parse(args.Parameters[1]) < 0)
 			{
 				args.Player.SendErrorMessage("不能给与玩家负值货币值");
 				return;
 			}
-			Db.UpC(args.Parameters[1], int.Parse(args.Parameters[2]));
+			Db.UpC(args.Parameters[0], int.Parse(args.Parameters[1]));
 		}
 
 		private void Query(CommandArgs args)
