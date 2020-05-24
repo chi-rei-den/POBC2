@@ -6,9 +6,8 @@ namespace POBC2
 {
 	public class POBCConfin
 	{
-		public string Name = string.Empty;
 		public int[] IgnoreNpc = new int[0];
-		public int Multiple = 0;
+		public int Multiple = 1;
 
 		//todo: implement with hashset
 		public bool IsIgnored(int npctype)
@@ -25,20 +24,10 @@ namespace POBC2
 		{
 			if (!File.Exists(file))
 			{
-				WriteExample(file);
+				return new POBCConfin();
 			}
 			return JsonConvert.DeserializeObject<POBCConfin>(File.ReadAllText(file));
 		}
 
-		public static void WriteExample(string file)
-		{
-			POBCConfin conf = new POBCConfin()
-			{
-				Name = "POBC",
-				IgnoreNpc = new int[] { },
-				Multiple = 1
-			};
-			conf.Write(file);
-		}
 	}
 }
