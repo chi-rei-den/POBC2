@@ -14,6 +14,7 @@ namespace POBC2
 		{
 			return IgnoreNpc.Contains(npctype);
 		}
+    
 		public POBCConfin Write(string file)
 		{
 			File.WriteAllText(file, JsonConvert.SerializeObject(this, Formatting.Indented));
@@ -28,6 +29,5 @@ namespace POBC2
 			}
 			return JsonConvert.DeserializeObject<POBCConfin>(File.ReadAllText(file));
 		}
-
 	}
 }
