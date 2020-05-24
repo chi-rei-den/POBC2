@@ -14,7 +14,7 @@ namespace POBC2
 		#region Info
 		public override string Name => "PBOC";
 
-		public override string Author => "欲情";
+		public override string Author => "欲情,冲冲";
 
 		public override string Description => "DPS 获取货币系统.";
 
@@ -142,7 +142,7 @@ namespace POBC2
 			{
 				HelpText = "给与指定玩家一定数量货币."
 			});
-			Commands.ChatCommands.Add(new Command("pobc.Down", PobcDown, "pobcup", "扣钱")
+			Commands.ChatCommands.Add(new Command("pobc.Down", PobcDown, "pobcDown", "扣钱")
 			{
 				HelpText = "减少玩家一定数量货币."
 			});
