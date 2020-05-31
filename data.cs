@@ -38,7 +38,7 @@ namespace POBC2
 
                 int coin = calcExp(value);
 
-                TShock.Players[i].SendInfoMessage($"你因击败了{Main.npc[index].GivenOrTypeName}而获得{coin}经验");
+                System.Diagnostics.Debug.WriteLine($"你因击败了{Main.npc[index].GivenOrTypeName}而获得{coin}经验");
 
                 if (Db.Queryuser(account))
                     Db.UpC(account, coin);
