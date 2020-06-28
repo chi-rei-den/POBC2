@@ -8,6 +8,8 @@ namespace POBC2
 	{
 		public int[] IgnoreNpc = new int[0];
 		public int Multiple = 1;
+		public bool PlayerKillFine = true;
+		public double DeductionPercentage = 0.1;
 
 		//todo: implement with hashset
 		public bool IsIgnored(int npctype)

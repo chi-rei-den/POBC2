@@ -59,6 +59,13 @@ namespace POBC2
 					data.ClearPlayer(playerID);
 					//Data.Data.DelUser(n);
 				}
+
+                if (Config.PlayerKillFine)
+                {
+				var c = Math.Round(Db.QueryCurrency(n) * Config.DeductionPercentage);
+				Db.DownC(n, (int)c);
+				TShock.Players[playerID].SendWarningMessage(" 您因死亡被而被扣除："+ (int)c + " 货币");
+				}
 			}
 		}
 
