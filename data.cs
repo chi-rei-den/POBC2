@@ -19,7 +19,7 @@ namespace POBC2
         {
             for (int i = 0; i < Main.maxNPCs; ++i)
             {
-                damage[i, Main.maxPlayers] = damage[i, index];
+                damage[i, Main.maxPlayers] += damage[i, index];
                 damage[i, index] = 0;
             }
         }
@@ -38,12 +38,17 @@ namespace POBC2
 
                 int coin = calcExp(value);
 
-                System.Diagnostics.Debug.WriteLine($"你因击败了{Main.npc[index].GivenOrTypeName}而获得{coin}经验");
+                if (coin == 0)
+                {
+                    continue;
+                }
+                TShock.Players[i].SendWarningMessage($"你因击败了{Main.npc[index].GivenOrTypeName}而获得{coin}经验");
+                //System.Diagnostics.Debug.WriteLine($"你因击败了{Main.npc[index].GivenOrTypeName}而获得{coin}经验");
 
                 if (Db.Queryuser(account))
-                    Db.UpC(account, coin);
+                    Db.UpC(account, coin, $"用户击杀了{Main.npc[index].GivenOrTypeName}而获得{coin}经验");
                 else
-                    Db.Adduser(account, coin);
+                    Db.Adduser(account, coin,$"创建了POBC 用户:{account} \n ,用户击杀了{Main.npc[index].GivenOrTypeName}而获得{coin}经验");
             }
         }
 

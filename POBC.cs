@@ -21,7 +21,7 @@ namespace POBC2
 		public override Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 		public string ConfigPath => Path.Combine(TShock.SavePath, "POBC.json");
 		public POBCConfin Config = new POBCConfin();
-		public string time = DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss");
+		//public string time = DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss");    yuqing : 日志整体移动到DB Sheet
 		#endregion
 
 		#region Initialize
@@ -48,24 +48,28 @@ namespace POBC2
 
 		private void GetData(GetDataEventArgs args)
 		{
+			if (!Config.PlayerKillFine)
+			{
+				return;
+			}
 			if (args.MsgID == PacketTypes.PlayerDeathV2)
 			{
-				args.Msg.reader.BaseStream.Position = args.Index;
+				//args.Msg.reader.BaseStream.Position = args.Index;  yuqing： 不知道干啥的 看上去没用直接//
 				int playerID = args.Msg.whoAmI;
-				//	var p = Main.player[playerID];
+				//	var p = Main.player[playerID];                    yuqing： 取消了P 变量
 				string n = Main.player[playerID].name;
 				if (n != null)
 				{
 					data.ClearPlayer(playerID);
-					//Data.Data.DelUser(n);
+					//Data.Data.DelUser(n);                        yuqing： 冲冲 说玩家死亡保留玩家缓存伤害 
+					var c = Math.Round(Db.QueryCurrency(n) * Config.DeductionPercentage);
+					Db.DownC(n, (int)c, "您因死亡被而被扣除");
+					TShock.Players[playerID].SendWarningMessage(" 您因死亡被而被扣除：" + (int)c + " 货币");
 				}
 
-                if (Config.PlayerKillFine)
-                {
-				var c = Math.Round(Db.QueryCurrency(n) * Config.DeductionPercentage);
-				Db.DownC(n, (int)c);
-				TShock.Players[playerID].SendWarningMessage(" 您因死亡被而被扣除："+ (int)c + " 货币");
-				}
+
+
+
 			}
 		}
 
@@ -88,7 +92,7 @@ namespace POBC2
 			//var n = TShock.Players[ply].Name;
 			if (!TShock.Players[ply].Group.HasPermission("pobc.c"))
 			{
-				TShock.Players[ply].SendWarningMessage(" 你没有权限!");
+				//TShock.Players[ply].SendWarningMessage(" 你没有权限!");   yuqing： 取消打怪权限提示
 				return;
 			}
 
@@ -96,15 +100,15 @@ namespace POBC2
 			int id = args.Npc.netID;
 			int id2 = args.Npc.whoAmI;
 			int damage = Math.Min(args.Damage, args.Npc.realLife == -1 ? args.Npc.life : Main.npc[args.Npc.realLife].life);
-			// 存在BUG  后面再来摸
+			// 存在BUG  后面再来摸                yuqing： 取消打怪权限提示
 
 			//int BB = Config.Pobcs[0].IgnoreNpc[1];
 			if (!Config.IsIgnored(id))
 			{
 				//todo: 没必要刀刀都记
-				System.IO.Directory.CreateDirectory(TShock.SavePath + $"\\POBC\\");
+				/*System.IO.Directory.CreateDirectory(TShock.SavePath + $"\\POBC\\");                     yuqing : 移动至 DB Sheet
 				System.IO.File.AppendAllText(TShock.SavePath + $"\\POBC\\{time}.txt", $" \r\n {name}击败的NPC {id} 获得经验：{damage}");
-				//	TShock.Utils.Broadcast(" 你击败的NPC :" + id + "获得经验：" + c, 255, 255, 255);
+				//	TShock.Utils.Broadcast(" 你击败的NPC :" + id + "获得经验：" + c, 255, 255, 255);     yuqing： 这里应该是每刀的数据 缓存*/
 				data.AddDamage(args.Npc.whoAmI, args.Player.whoAmI, damage);
 			}
 			else
@@ -172,7 +176,7 @@ namespace POBC2
 				args.Player.SendErrorMessage("玩家拥有的货币不够你要减去的货币数，玩家拥有货币数：" + Db.QueryCurrency(args.Parameters[0]));
 				return;
 			}
-			Db.DownC(args.Parameters[0], int.Parse(args.Parameters[1]));
+			Db.DownC(args.Parameters[0], int.Parse(args.Parameters[1]),"管理员扣除了您的货币");
 		}
 
 		private void Pobcup(CommandArgs args)
@@ -192,7 +196,7 @@ namespace POBC2
 				args.Player.SendErrorMessage("不能给与玩家负值货币值");
 				return;
 			}
-			Db.UpC(args.Parameters[0], int.Parse(args.Parameters[1]));
+			Db.UpC(args.Parameters[0], int.Parse(args.Parameters[1]),"管理员增加了您的货币");
 		}
 
 		private void Query(CommandArgs args)
