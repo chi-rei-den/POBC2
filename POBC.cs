@@ -99,7 +99,8 @@ namespace POBC2
 			string name = args.Player.name;
 			int id = args.Npc.netID;
 			int id2 = args.Npc.whoAmI;
-			int damage = Math.Min(args.Damage, args.Npc.realLife == -1 ? args.Npc.life : Main.npc[args.Npc.realLife].life);
+			//int damage = Math.Min(args.Damage, args.Npc.realLife == -1 ? args.Npc.life : Main.npc[args.Npc.realLife].life);
+			int damage = args.Damage;
 			// 存在BUG  后面再来摸                yuqing： 取消打怪权限提示
 
 			//int BB = Config.Pobcs[0].IgnoreNpc[1];
@@ -157,9 +158,43 @@ namespace POBC2
 			{
 				HelpText = "减少玩家一定数量货币."
 			});
+			Commands.ChatCommands.Add(new Command("pobc.Pay", Pay, "pay", "支付")
+			{
+				HelpText = "玩家支付给玩家货币."
+			});
 		}
 
-		private void PobcDown(CommandArgs args)
+        private void Pay(CommandArgs args)
+        {
+			if (args.Parameters.Count < 2)
+			{
+				args.Player.SendErrorMessage("语法错误，正确语法：/支付  玩家名 货币值");
+				return;
+			}
+			if (!Db.Queryuser(args.Parameters[0]))
+			{
+				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:" + args.Parameters[0] + "! 请确认玩家名");
+				return;
+			}
+			if (int.Parse(args.Parameters[1]) > Db.QueryCurrency(args.Player.Name))
+			{
+				args.Player.SendErrorMessage("您拥有的货币不够你要支付的货币数，拥有货币数：" + Db.QueryCurrency(args.Player.Name));
+				return;
+			}
+			Db.DownC(args.Player.Name, int.Parse(args.Parameters[1]), "支付货币给与玩家");
+			args.Player.SendErrorMessage($"您支付了{args.Parameters[1]}货币给与玩家 {args.Parameters[0]}，当前拥有货币数：" + Db.QueryCurrency(args.Player.Name));
+			for (int i = 0; i <TShock.Utils.GetActivePlayerCount() ; i++)
+			{
+				if (TShock.Players[i].Name == args.Parameters[0])
+                {
+					TShock.Players[i].SendErrorMessage($"玩家{args.Player.Name}支付了{args.Parameters[1]}货币给与您，当前拥有货币数：" + Db.QueryCurrency(TShock.Players[i].Name));
+					break;
+				}
+            }
+           
+		}
+
+        private void PobcDown(CommandArgs args)
 		{
 			if (args.Parameters.Count < 2)
 			{
