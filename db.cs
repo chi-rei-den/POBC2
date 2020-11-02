@@ -12,7 +12,6 @@ namespace POBC2
     //fixme: defend against the sql injection
     public static class Db
     {
-        public static string time = DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss");
         private static IDbConnection db;
         
         public static void Connect() //连接属性
@@ -65,20 +64,20 @@ namespace POBC2
                 return u;
             }
         }
+
         public static void UpC(string user, int data,string str="未填写原因")
         {
            // string query = $"UPDATE POBC SET Currency = Currency + {data} WHERE UserName = '{user};";
             db.Query("UPDATE POBC SET Currency = Currency + @0 WHERE UserName = @1",data,user);
-            System.IO.Directory.CreateDirectory(TShock.SavePath + $"\\POBC\\");
-            System.IO.File.AppendAllText(TShock.SavePath + $"\\POBC\\{time}.txt", $"\r\n{user}增加了{data}货币 原因:{str}");
+            POBCSystem.Log($"\r\n{user}增加了{data}货币 原因:{str}");
         }
 
         public static void DownC(string user, int data,string str = "未填写原因")
         {
           //  string query = $"UPDATE POBC SET Currency = Currency - {data} WHERE UserName = '{user}';";
             db.Query("UPDATE POBC SET Currency = Currency - @0 WHERE UserName = @1",data,user);
-            System.IO.Directory.CreateDirectory(TShock.SavePath + $"\\POBC\\");
-            System.IO.File.AppendAllText(TShock.SavePath + $"\\POBC\\{time}.txt", $"\r\n{user}扣除了{data}货币 原因:{str}");
+            Directory.CreateDirectory(TShock.SavePath + $"\\POBC\\");
+            POBCSystem.Log($"\r\n{user}扣除了{data}货币 原因:{str}");
         }
         public static void Adduser(string user, int data ,string str="未填写原因")
         {
@@ -86,8 +85,8 @@ namespace POBC2
 
             db.Query("INSERT INTO POBC (UserName,Currency) VALUES (@0,@1)",user,data);
 
-            System.IO.Directory.CreateDirectory(TShock.SavePath + $"\\POBC\\");
-            System.IO.File.AppendAllText(TShock.SavePath + $"\\POBC\\{time}.txt", $"\r\n{user}增加了{data}货币 原因:{str}");
+            Directory.CreateDirectory(TShock.SavePath + $"\\POBC\\");
+            POBCSystem.Log($"\r\n{user}增加了{data}货币 原因:{str}");
         }
 
         public static int QueryCurrency(string user)

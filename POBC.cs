@@ -1,4 +1,7 @@
+using ReLogic.Peripherals.RGB;
 using System;
+using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Terraria;
@@ -11,6 +14,9 @@ namespace POBC2
 	[ApiVersion(2, 1)]
 	public class POBCSystem : TerrariaPlugin
 	{
+		internal static Action<string> Log;
+		private StreamWriter sw;
+
 		#region Info
 		public override string Name => "PBOC";
 
@@ -75,6 +81,7 @@ namespace POBC2
 
 		private void Login(PlayerPostLoginEventArgs e)
 		{
+			data.ClearPlayer(e.Player.Index); //clear the previous player data in case the damage count is inherited to other players.
 			//throw new NotImplementedException();
 		}
 
@@ -88,6 +95,8 @@ namespace POBC2
 
 		private void Dps(NpcStrikeEventArgs args)
 		{
+			Log($"player `{args.Player.name}` dealt {args.Damage} to `{args.Npc.FullName}`");
+
 			int ply = args.Player.whoAmI;
 			//var n = TShock.Players[ply].Name;
 			if (!TShock.Players[ply].Group.HasPermission("pobc.c"))
@@ -101,7 +110,11 @@ namespace POBC2
 			int id2 = args.Npc.whoAmI;
 			//int damage = Math.Min(args.Damage, args.Npc.realLife == -1 ? args.Npc.life : Main.npc[args.Npc.realLife].life);
 			int damage = args.Damage;
+			var life = args.Npc.realLife == -1 ? args.Npc.life : Main.npc[args.Npc.realLife].life;
 			// 存在BUG  后面再来摸                yuqing： 取消打怪权限提示
+			// overflow damage may cause to unexpected result.
+
+			if (life > 0) damage = Math.Min(damage, life);
 
 			//int BB = Config.Pobcs[0].IgnoreNpc[1];
 			if (!Config.IsIgnored(id))
@@ -131,7 +144,7 @@ namespace POBC2
 				ServerApi.Hooks.NetGetData.Deregister(this, GetData);//抓包
 				PlayerHooks.PlayerPostLogin -= Login;
 				PlayerHooks.PlayerLogout -= UserOut;
-
+				sw.Dispose();
 			}
 			base.Dispose(disposing);
 		}
@@ -162,6 +175,18 @@ namespace POBC2
 			{
 				HelpText = "玩家支付给玩家货币."
 			});
+
+			Directory.CreateDirectory(Path.Combine(TShock.SavePath, "POBC"));
+
+			sw = new StreamWriter(new FileStream(Path.Combine(TShock.SavePath, "POBC", $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.txt"), FileMode.Append));
+
+			Log = s =>
+			{
+				var st = new StackTrace();
+				var method = st.GetFrame(1).GetMethod();
+				sw.WriteLine($"[{DateTime.Now:hh-mm-ss}]\t[{method.DeclaringType.FullName}::{method.Name}]\t{s}");
+				sw.Flush();
+			};
 		}
 
         private void Pay(CommandArgs args)

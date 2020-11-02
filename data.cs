@@ -1,4 +1,7 @@
+using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.ComponentModel.Design;
+using System.Linq;
 using Terraria;
 using TShockAPI;
 
@@ -29,6 +32,9 @@ namespace POBC2
             int s = 0;
             for (int i = 0; i < Main.maxPlayers + 1; ++i)
                 s += damage[index, i];
+
+            POBCSystem.Log($"calculatng exp for npc `{Main.npc[index].FullName}` with damages ({string.Join("\t", from i in Enumerable.Range(0, 255) select $"`{Main.player[i].name}`(id={i}) => {damage[index, i]}")})");
+            
             for (int i = 0; i < Main.maxPlayers; ++i)
             {
                 string account = TShock.Players[i]?.Account?.Name;
