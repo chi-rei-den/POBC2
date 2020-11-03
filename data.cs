@@ -33,7 +33,7 @@ namespace POBC2
             for (int i = 0; i < Main.maxPlayers + 1; ++i)
                 s += damage[index, i];
 
-            POBCSystem.Log($"calculatng exp for npc `{Main.npc[index].FullName}` with damages ({string.Join("\t", from i in Enumerable.Range(0, 255) select $"`{Main.player[i].name}`(id={i}) => {damage[index, i]}")})");
+            POBCSystem.Log($"calculatng exp for npc `{Main.npc[index].FullName}` with damages ({string.Join("\t", from i in Enumerable.Range(0, 255) where damage[index, i] != 0 select $"`{Main.player[i].name}`(id={i}) => {damage[index, i]}")})");
             
             for (int i = 0; i < Main.maxPlayers; ++i)
             {
