@@ -207,6 +207,7 @@ namespace POBC2
 				return;
 			}
 			Db.DownC(args.Player.Name, int.Parse(args.Parameters[1]), "支付货币给与玩家");
+			Db.UpC(args.Parameters[0], int.Parse(args.Parameters[1]), "玩家支付货币给与您");
 			args.Player.SendErrorMessage($"您支付了{args.Parameters[1]}货币给与玩家 {args.Parameters[0]}，当前拥有货币数：" + Db.QueryCurrency(args.Player.Name));
 			for (int i = 0; i <TShock.Utils.GetActivePlayerCount() ; i++)
 			{
