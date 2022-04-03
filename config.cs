@@ -7,6 +7,8 @@ namespace POBC2
 	public class POBCConfin
 	{
 		public int[] IgnoreNpc = new int[0];
+		public int infodisplay = 1;
+		public string displaytext = "你因击败了{Name}而获得{coin}经验";
 		public int Multiple = 1;
 		public bool PlayerKillFine = true;
 		public double DeductionPercentage = 0.1;

@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel.Design;
 using System.Linq;
 using Terraria;
+using Terraria.Localization;
 using TShockAPI;
 
 namespace POBC2
@@ -27,7 +28,7 @@ namespace POBC2
             }
         }
 
-        public void SettleNPC(int index)
+        public void SettleNPC(int index, int infodisplay,string text)
         {
             int s = 0;
             for (int i = 0; i < Main.maxPlayers + 1; ++i)
@@ -43,12 +44,51 @@ namespace POBC2
                 if (string.IsNullOrEmpty(account)) continue;
 
                 int coin = calcExp(value);
-
+                
                 if (coin == 0)
                 {
                     continue;
                 }
-                TShock.Players[i].SendWarningMessage($"你因击败了{Main.npc[index].GivenOrTypeName}而获得{coin}经验");
+                switch (infodisplay)
+                {
+                    case 1:
+                        if (text.Contains("{Name}"))
+                        {
+                            text = text.Replace("{Name}", Main.npc[index].GivenOrTypeName);
+                        }
+                        if (text.Contains("{coin}"))
+                        {
+                            text = text.Replace("{coin}", coin.ToString());
+                        }                     
+                        TShock.Players[i].SendWarningMessage(text);
+                        break;
+                    case 2:
+                        if (text.Contains("{Name}"))
+                        {
+                            text = text.Replace("{Name}", Main.npc[index].GivenOrTypeName);
+                        }
+                        if (text.Contains("{coin}"))
+                        {
+                            text = text.Replace("{coin}", coin.ToString());
+                        }
+                        allmsg(i, text);
+                        break;
+                    case 3:
+                        if (text.Contains("{Name}"))
+                        {
+                            text = text.Replace("{Name}", Main.npc[index].GivenOrTypeName);
+                        }
+                        if (text.Contains("{coin}"))
+                        {
+                            text = text.Replace("{coin}", coin.ToString());
+                        }
+                        playermsg(i, text);
+                        break;
+                    default:
+                        TShock.Players[i].SendWarningMessage(text);
+                        break;
+                }
+                
                 //System.Diagnostics.Debug.WriteLine($"你因击败了{Main.npc[index].GivenOrTypeName}而获得{coin}经验");
 
                 if (Db.Queryuser(account))
@@ -61,6 +101,35 @@ namespace POBC2
         public void AddDamage(int npc, int player, int damage)
         {
             this.damage[npc, player] += damage;
+        }
+
+        public void allmsg(int id, string msg)
+        {
+            Random rd = new Random();
+            int r = rd.Next(0, 255);
+            int g = rd.Next(0, 255);
+            int b = rd.Next(0, 255);
+            string message = msg;
+            Microsoft.Xna.Framework.Color c = new Microsoft.Xna.Framework.Color(r, g, b);
+            NetMessage.SendData(119,
+    -1, -1, NetworkText.FromLiteral(message), (int)c.PackedValue, TShock.Players[id].X, TShock.Players[id].Y + 50);
+
+
+
+        }
+        public void playermsg(int id, string msg)
+        {
+            Random rd = new Random();
+            int r = rd.Next(0, 255);
+            int g = rd.Next(0, 255);
+            int b = rd.Next(0, 255);
+            string message = msg;
+            Microsoft.Xna.Framework.Color c = new Microsoft.Xna.Framework.Color(r, g, b);
+
+            TShock.Players[id].SendData((PacketTypes)119, message, (int)c.PackedValue, TShock.Players[id].X, TShock.Players[id].Y + 50);
+
+
+
         }
     }
 }

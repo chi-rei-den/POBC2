@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Terraria;
+using Terraria.Localization;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.Hooks;
@@ -35,6 +36,7 @@ namespace POBC2
 		public Data data;
 		public override void Initialize()
 		{
+			File();
 			Db.Connect();
 			data = new Data(d => (d * 147 / 100) / 2 * Config.Multiple);
 			ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
@@ -43,7 +45,7 @@ namespace POBC2
 			ServerApi.Hooks.NetGetData.Register(this, GetData);//抓包
 			PlayerHooks.PlayerPostLogin += Login;
 			PlayerHooks.PlayerLogout += UserOut;
-			File();
+
 		}
 
 
@@ -87,9 +89,9 @@ namespace POBC2
 
 		public void KillID(NpcKilledEventArgs args)
 		{
-			if (!Config.IsIgnored(args.npc.netID))
+			if(!Config.IsIgnored(args.npc.netID))
 			{
-				data.SettleNPC(args.npc.whoAmI);
+				data.SettleNPC(args.npc.whoAmI,Config.infodisplay,Config.displaytext);
 			}
 		}
 
@@ -279,6 +281,8 @@ namespace POBC2
 				TShock.Log.ConsoleError("[POBC] 读取配置文件发生错误!\n{0}".SFormat(ex.ToString()));
 			}
 		}
+
+
 	}
 }
 
