@@ -27,7 +27,7 @@ namespace POBC2
 
 		public override Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 		public string ConfigPath => Path.Combine(TShock.SavePath, "POBC.json");
-		public POBCConfin Config = new POBCConfin();
+		public POBCConfig Config = new POBCConfig();
 		//public string time = DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss");    yuqing : 日志整体移动到DB Sheet
 		#endregion
 
@@ -203,6 +203,11 @@ namespace POBC2
 				args.Player.SendErrorMessage("未能在POBC用户数据中查找到该玩家:" + args.Parameters[0] + "! 请确认玩家名");
 				return;
 			}
+			if (int.Parse(args.Parameters[1]) <1)
+			{
+				args.Player.SendErrorMessage("支付的货币不能小于 1" );
+				return;
+			}
 			if (int.Parse(args.Parameters[1]) > Db.QueryCurrency(args.Player.Name))
 			{
 				args.Player.SendErrorMessage("您拥有的货币不够你要支付的货币数，拥有货币数：" + Db.QueryCurrency(args.Player.Name));
@@ -273,11 +278,11 @@ namespace POBC2
 		{
 			try
 			{
-				Config = POBCConfin.Read(ConfigPath).Write(ConfigPath);
+				Config = POBCConfig.Read(ConfigPath).Write(ConfigPath);
 			}
 			catch (Exception ex)
 			{
-				Config = new POBCConfin();
+				Config = new POBCConfig();
 				TShock.Log.ConsoleError("[POBC] 读取配置文件发生错误!\n{0}".SFormat(ex.ToString()));
 			}
 		}

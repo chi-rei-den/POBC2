@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace POBC2
 {
-	public class POBCConfin
+	public class POBCConfig
 	{
 		public int[] IgnoreNpc = new int[0];
 		public int infodisplay = 1;
@@ -19,19 +19,19 @@ namespace POBC2
 			return IgnoreNpc.Contains(npctype);
 		}
     
-		public POBCConfin Write(string file)
+		public POBCConfig Write(string file)
 		{
 			File.WriteAllText(file, JsonConvert.SerializeObject(this, Formatting.Indented));
 			return this;
 		}
 
-		public static POBCConfin Read(string file)
+		public static POBCConfig Read(string file)
 		{
 			if (!File.Exists(file))
 			{
-				return new POBCConfin();
+				return new POBCConfig();
 			}
-			return JsonConvert.DeserializeObject<POBCConfin>(File.ReadAllText(file));
+			return JsonConvert.DeserializeObject<POBCConfig>(File.ReadAllText(file));
 		}
 	}
 }
