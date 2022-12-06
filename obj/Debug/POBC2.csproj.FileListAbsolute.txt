@@ -1,0 +1,9 @@
+F:\仓库\tshock\TShock4.5.17_Terraria_1.4.3.6\ServerPlugins\POBC2.dll
+F:\仓库\tshock\TShock4.5.17_Terraria_1.4.3.6\ServerPlugins\POBC2.pdb
+F:\仓库\GitHub\pobc\POBC2\obj\Debug\POBC2.csproj.AssemblyReference.cache
+F:\仓库\GitHub\pobc\POBC2\obj\Debug\POBC2.csproj.CoreCompileInputs.cache
+F:\仓库\GitHub\pobc\POBC2\obj\Debug\POBC2.csproj.CopyComplete
+F:\仓库\GitHub\pobc\POBC2\obj\Debug\POBC2.dll
+F:\仓库\GitHub\pobc\POBC2\obj\Debug\POBC2.pdb
+C:\Users\cy332\Desktop\tshockcore\ServerPlugins\POBC2.dll
+C:\Users\cy332\Desktop\tshockcore\ServerPlugins\POBC2.pdb

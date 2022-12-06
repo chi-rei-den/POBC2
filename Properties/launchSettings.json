@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "POBC2": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\cy332\\Desktop\\tshockcore\\TShock.Server.exe",
+      "workingDirectory": "C:\\Users\\cy332\\Desktop\\tshockcore\\ServerPlugins"
+    }
+  }
+}

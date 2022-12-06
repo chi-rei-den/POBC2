@@ -1,8 +1,4 @@
-using Mono.Data.Sqlite;
 using MySql.Data.MySqlClient;
-using System;
-using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using TShockAPI;
 using TShockAPI.DB;
